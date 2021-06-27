@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# The result of webpack build
+/server/build/
+/server/public/
+/server/.Ds_Store
+
