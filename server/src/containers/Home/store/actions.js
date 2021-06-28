@@ -11,6 +11,6 @@ export const getHomeList = () => {
 			.then((res) => {
 				const list = res.data.data
 				dispatch(changeList(list))
-			});
+			})
 	}
 } 

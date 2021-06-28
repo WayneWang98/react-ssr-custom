@@ -23,9 +23,47 @@ app.get('*', function (req, res) {
   const promises = []
   matchedRoutes.forEach(item => {
     if (item.route.loadData) {
-      promises.push(item.route.loadData(store))
+      const promise = new Promise((resolve, reject) => {
+        item.route.loadData(store).then(resolve).catch(resolve)
+      })
+      promises.push(promise)
     }
   })
+
+  // 一个页面要加载A\B\C\D 四个组件，都需要用loadData加载数据，假设A组件加载错误：
+  // B、C、D不管成功还是失败，都会被执行
+
+
+  // 一个页面要加载A\B\C\D 四个组件，都需要用loadData加载数据，假设A组件加载错误：
+  // 1.B、C、D组件数据已经加载完成，此时能渲染出B、C、D组件
+  // 2.B、C、D假设接口比较慢，A组件错误时，其他三个组件还没加载完成，会直接走catch，此时B、C、D组件无法渲染出来
+
+  // promises = [a, b, c, d]
+  // Promise.all(promises).then(() => { // loadData是异步操作，需要等所有loadData执行完之后再去获取store
+  //   const context = {}
+  //   const html = render(store, routes, req, context)
+
+  //   if (context.action === 'REPLACE') { // 要做重定向操作
+  //     res.redirect(301, context.url)
+  //   } else if (context.NOT_FOUND) {
+  //     res.status(404)
+  //     res.send(html)
+  //   } else {
+  //     res.send(html)
+  //   }
+  // }).catch (() => {
+  //   const context = {}
+  //   const html = render(store, routes, req, context)
+
+  //   if (context.action === 'REPLACE') {
+  //     res.redirect(301, context.url)
+  //   } else if (context.NOT_FOUND) {
+  //     res.status(404)
+  //     res.send(html)
+  //   } else {
+  //     res.send(html)
+  //   }
+  // })
 
   Promise.all(promises).then(() => { // loadData是异步操作，需要等所有loadData执行完之后再去获取store
     const context = {}
@@ -39,7 +77,6 @@ app.get('*', function (req, res) {
     } else {
       res.send(html)
     }
-    
   })
 })
 
