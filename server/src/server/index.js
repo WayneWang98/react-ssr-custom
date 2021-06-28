@@ -11,10 +11,6 @@ app.use(express.static('public')) // 服务器发现客户端在请求静态文�
 // server作为中间层进行代理
 app.use('/api', proxy('http://47.95.113.63', {
   proxyReqPathResolver: function (req) {
-    // var parts = req.url.split('?');
-    // var queryString = parts[1];
-    // var updatedPath = parts[0].replace(/test/, 'tent');
-    // return updatedPath + (queryString ? '?' + queryString : '');
     return '/ssr/api' + req.url
   }
 }))
@@ -32,7 +28,18 @@ app.get('*', function (req, res) {
   })
 
   Promise.all(promises).then(() => { // loadData是异步操作，需要等所有loadData执行完之后再去获取store
-    res.send(render(store, routes, req))
+    const context = {}
+    const html = render(store, routes, req, context)
+
+    if (context.action === 'REPLACE') { // 要做重定向操作
+      res.redirect(301, context.url)
+    } else if (context.NOT_FOUND) {
+      res.status(404)
+      res.send(html)
+    } else {
+      res.send(html)
+    }
+    
   })
 })
 

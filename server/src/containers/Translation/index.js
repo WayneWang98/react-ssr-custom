@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getTranslationList } from './store/actions'
-import { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom' // 只会在客户端做redirect操作
 
 class Translation extends Component {
 
@@ -15,7 +15,7 @@ class Translation extends Component {
 			<div>
 				{this.getList()}
 			</div>
-		) : <Redirect to='/' />
+		) : <Redirect to='/' /> 
 	}
 
 	componentDidMount() {
