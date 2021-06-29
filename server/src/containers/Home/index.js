@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getHomeList } from './store/actions'
+import styles from './style.css'
 
 class Home extends Component {
+
+	componentWillMount () {
+		if (this.props.staticContext) { // 客户端渲染不会走这个逻辑
+			this.props.staticContext.css = styles._getCss()
+		}
+	}
 
 	getList() {
 		const { list } = this.props
@@ -11,7 +18,7 @@ class Home extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className={styles.test}>
 				{this.getList()}
 				<button onClick={()=>{alert('click1')}}>
 					click

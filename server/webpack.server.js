@@ -11,7 +11,20 @@ const serverConfig = {
 		filename: 'bundle.js',
 		path: path.resolve(__dirname, 'build')
 	},
-	externals: [nodeExternals()]
+	externals: [nodeExternals()],
+	module: {
+		rules: [{
+			test: /\.css?$/,
+			use: ['isomorphic-style-loader', { // 服务端渲染时，不能使用style-loader，要使用这个支持服务达渲染的loader
+				loader: 'css-loader',
+				options: {
+					importLoaders: 1,
+					modules: true,
+					localIdentName: '[name]_[local]_[hash:base64:5]'
+				}
+			}]
+		}]
+	}
 }
 
 module.exports = merge(config, serverConfig)
