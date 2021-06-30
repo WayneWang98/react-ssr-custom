@@ -7,7 +7,7 @@ class Home extends Component {
 
 	componentWillMount () {
 		if (this.props.staticContext) { // 客户端渲染不会走这个逻辑
-			this.props.staticContext.css = styles._getCss()
+			this.props.staticContext.css.push(styles._getCss())
 		}
 	}
 
@@ -34,11 +34,6 @@ class Home extends Component {
 	}
 }
 
-Home.loadData = (store) => {
-	// 这个函数，负责在服务器端渲染之前，把这个路由需要的数据提前加载好
-	return store.dispatch(getHomeList())
-}
-
 const mapStateToProps = state => ({
 	list: state.home.newsList
 });
@@ -49,4 +44,10 @@ const mapDispatchToProps = dispatch => ({
 	}
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+const ExportHome = connect(mapStateToProps, mapDispatchToProps)(Home)
+ExportHome.loadData = (store) => {
+	// 这个函数，负责在服务器端渲染之前，把这个路由需要的数据提前加载好
+	return store.dispatch(getHomeList())
+}
+
+export default ExportHome

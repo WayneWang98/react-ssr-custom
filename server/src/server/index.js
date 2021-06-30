@@ -66,7 +66,9 @@ app.get('*', function (req, res) {
   // })
 
   Promise.all(promises).then(() => { // loadData是异步操作，需要等所有loadData执行完之后再去获取store
-    const context = {}
+    const context = {
+      css: []
+    }
     const html = render(store, routes, req, context)
 
     if (context.action === 'REPLACE') { // 要做重定向操作
