@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getHomeList } from './store/actions'
+import withStyle from '../../withStyle'
 import styles from './style.css'
 
 class Home extends Component {
@@ -13,16 +14,13 @@ class Home extends Component {
 
 	getList() {
 		const { list } = this.props
-		return list.map(item => <div key={item.id}>{item.title}</div>)
+		return list.map(item => <div key={item.id} className={styles.item}>{item.title}</div>)
 	}
 
 	render() {
 		return (
-			<div className={styles.test}>
+			<div className={styles.container}>
 				{this.getList()}
-				<button onClick={()=>{alert('click1')}}>
-					click
-				</button>
 			</div>
 		)
 	}
@@ -44,7 +42,7 @@ const mapDispatchToProps = dispatch => ({
 	}
 })
 
-const ExportHome = connect(mapStateToProps, mapDispatchToProps)(Home)
+const ExportHome = connect(mapStateToProps, mapDispatchToProps)(withStyle(Home, styles))
 ExportHome.loadData = (store) => {
 	// 这个函数，负责在服务器端渲染之前，把这个路由需要的数据提前加载好
 	return store.dispatch(getHomeList())

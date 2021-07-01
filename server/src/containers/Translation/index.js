@@ -2,17 +2,19 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getTranslationList } from './store/actions'
 import { Redirect } from 'react-router-dom' // 只会在客户端做redirect操作
+import styles from './style.css'
+import withStyle from '../../withStyle'
 
 class Translation extends Component {
 
 	getList() {
 		const { list } = this.props
-		return list.map(item => <div key={item.id}>{item.title}</div>)
+		return list.map(item => <div key={item.id} className={styles.item}>{item.title}</div>)
 	}
 
 	render() {
 		return this.props.login ? (
-			<div>
+			<div className={styles.container}>
 				{this.getList()}
 			</div>
 		) : <Redirect to='/' /> 
@@ -36,7 +38,7 @@ const mapDispatchToProps = dispatch => ({
 	}
 })
 
-const ExportTranslation = connect(mapStateToProps, mapDispatchToProps)(Translation)
+const ExportTranslation = connect(mapStateToProps, mapDispatchToProps)(withStyle(Translation, styles))
 ExportTranslation.loadData = (store) => {
 	// 这个函数，负责在服务器端渲染之前，把这个路由需要的数据提前加载好
 	return store.dispatch(getTranslationList())
