@@ -1,4 +1,5 @@
 import React from 'react'
+import { Helmet } from 'react-helmet'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom' // 服务器端渲染路由
 import { Provider } from 'react-redux'
@@ -14,13 +15,15 @@ export const render = (store, routes, req, context) => {
       </StaticRouter>
     </Provider>
   ))
+  const helmet = Helmet.renderStatic()
 
   const cssStr = context.css.length ? context.css.join('\n') : ''
 
   return `
     <html>
       <head>
-        <title>ssr</title>
+        ${helmet.title.toString()}
+        ${helmet.meta.toString()}
         <style>${cssStr}</style>
       </head>
       <body>

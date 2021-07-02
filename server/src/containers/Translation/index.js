@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'
 import { getTranslationList } from './store/actions'
 import { Redirect } from 'react-router-dom' // 只会在客户端做redirect操作
@@ -14,9 +15,15 @@ class Translation extends Component {
 
 	render() {
 		return this.props.login ? (
-			<div className={styles.container}>
-				{this.getList()}
-			</div>
+			<Fragment>
+				<Helmet>
+					<title>这是wayne wang 的ssr翻译页--有很多的翻译信息哦</title>
+					<meta name="description" content="丰富多彩的翻译内容"></meta>
+				</Helmet>
+				<div className={styles.container}>
+					{this.getList()}
+				</div>
+			</Fragment>
 		) : <Redirect to='/' /> 
 	}
 
